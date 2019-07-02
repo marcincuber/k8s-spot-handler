@@ -2,8 +2,7 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: spot-interrupt-handler
-  namespace: kube-system
+  name: k8s-spot-handler
 rules:
 - apiGroups:
   - ""
@@ -31,42 +30,40 @@ rules:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: spot-interrupt-handler
-  namespace: kube-system
+  name: k8s-spot-handler
+  namespace: default
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: spot-interrupt-handler
-  namespace: kube-system
+  name: k8s-spot-handler
 subjects:
 - kind: ServiceAccount
-  name: spot-interrupt-handler
-  namespace: kube-system
+  name: k8s-spot-handler
+  namespace: default
 roleRef:
   kind: ClusterRole
-  name: spot-interrupt-handler
+  name: k8s-spot-handler
   apiGroup: rbac.authorization.k8s.io
-
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: spot-interrupt-handler
-  namespace: kube-system
+  name: k8s-spot-handler
+  namespace: default
 spec:
   selector:
     matchLabels:
-      app: spot-interrupt-handler
+      app: k8s-spot-handler
   template:
     metadata:
       labels:
-        app: spot-interrupt-handler
+        app: k8s-spot-handler
     spec:
-      serviceAccountName: spot-interrupt-handler
+      serviceAccountName: k8s-spot-handler
       containers:
-      - name: spot-interrupt-handler
-        image: marcincuber/k8s-spot-handler:1.15.0-1
+      - name: k8s-spot-handler
+        image: marcincuber/k8s-spot-handler:1.13.7-1
         imagePullPolicy: Always
         env:
         - name: POD_NAME
@@ -81,5 +78,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        - name: VERBOSE
+          value: "0"
       nodeSelector:
-        lifecycle: Ec2Spot
+        lifecycle: Ec2Spot # Ensure to have this node label available
