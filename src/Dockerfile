@@ -4,9 +4,9 @@ FROM ${BASE_IMAGE}
 ENV HOME=/srv
 WORKDIR /srv
 
-ARG VERSION
+ARG KUBE_VERSION
 RUN apk add --no-cache curl ca-certificates
-RUN curl -f -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${VERSION}/bin/linux/amd64/kubectl && \
+RUN curl -f -s -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v${KUBE_VERSION}/bin/linux/amd64/kubectl && \
     chmod +x /usr/local/bin/kubectl && \
     kubectl version --client
 

@@ -17,9 +17,9 @@ Tags denotes Kubernetes/`kubectl` versions.
 Using the same version for your Kubernetes cluster and `k8s-spot-handler` is recommended.
 Note that the `-1` (or similar) is the revision of this tool, in case we need versioning.
 
-* `marcincuber/k8s-spot-handler:1.12.8-1`
-* `marcincuber/k8s-spot-handler:1.13.6-1`
-* `marcincuber/k8s-spot-handler:1.14.2-1`
+* `marcincuber/k8s-spot-handler:1.13.7-1`
+* `marcincuber/k8s-spot-handler:1.14.3-1`
+* `marcincuber/k8s-spot-handler:1.15.0-1`
 
 ## Why use it
 
