@@ -35,7 +35,7 @@ AZ=$(curl -s ${AZ_URL})
 INSTANCE_ID_URL=${INSTANCE_ID_URL:-http://169.254.169.254/latest/meta-data/instance-id}
 INSTANCE_ID=$(curl -s ${INSTANCE_ID_URL})
 if [[ -z ${CLUSTER} ]]; then
-  echo "[WARNING] Environment variable CLUSTER has no name set. You can set this to get it reported in the Slack message." 1>&2
+  echo "[WARNING] Environment variable CLUSTER has no name set." 1>&2
 else
   CLUSTER_INFO=" (${CLUSTER})"
 fi
@@ -60,6 +60,7 @@ MESSAGE="Spot Termination${CLUSTER_INFO}: ${NODE_NAME}, Instance: ${INSTANCE_ID}
 # Drain the node.
 # https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/#use-kubectl-drain-to-remove-a-node-from-service
 GRACE_PERIOD=${GRACE_PERIOD:-120}
+kubectl cordon "${NODE_NAME}"
 kubectl drain "${NODE_NAME}" --force --ignore-daemonsets --delete-local-data --grace-period="${GRACE_PERIOD}"
 
 # Sleep for 200 seconds to prevent this script from looping.
