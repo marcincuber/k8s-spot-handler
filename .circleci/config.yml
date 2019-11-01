@@ -74,7 +74,6 @@ jobs:
           directory: src
       - persist_to_workspace:
           root: ./
-          paths: src
 
   push-image:
     docker:
