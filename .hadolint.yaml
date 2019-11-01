@@ -2,3 +2,4 @@ ignored:
   - DL3006 # this is triggered because we're using build args to determine what image to use
   - DL3027 # do not use apt as it is meant to be a end-user tool, use apt-get or apt-cache instead
   - DL3013 # Pin versions in pip.
+  - DL3018 # Pin versions in apk.
