@@ -1,0 +1,107 @@
+version: 2.1
+
+executors:
+  lint:
+    docker:
+      - image: hadolint/hadolint:v1.17.0-debian
+
+commands:
+  lint:
+    description: "Lint a dockerfile"
+    parameters:
+      directory:
+        type: string
+    steps:
+      - run: hadolint << parameters.directory >>/Dockerfile
+
+  build:
+    description: "Build a directory using make"
+    parameters:
+      directory:
+        type: string
+    steps:
+      - run: |
+            make -C << parameters.directory >> build_version
+            make -C << parameters.directory >> save
+
+  push-setup:
+    description: "Setup a machine to do Docker pushes"
+    steps:
+      - run: apk add --no-cache build-base curl jq
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - checkout
+      - attach_workspace:
+          at: ./
+      - run: |
+            docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+
+  push:
+    description: "Push a directory using make"
+    parameters:
+     directory:
+       type: string
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+      - run:
+          name: Check if docker image with tag already exists
+          command: |
+            if make -C << parameters.directory >> image_exists > /dev/null; 
+            then
+              echo "Docker image already exists."
+            else
+              make -C << parameters.directory >> load
+              make -C << parameters.directory >> push_version
+            fi
+            
+jobs:
+  lint:
+    executor: lint
+    steps:
+      - checkout
+      - lint:
+          directory: src
+  
+  build-image:
+    description: "Images that will be used to run applications"
+    machine:
+      docker_layer_caching: false
+    steps:
+      - checkout
+      - build:
+          directory: src
+      - persist_to_workspace:
+          root: ./
+          paths: src
+
+  push-image:
+    docker:
+      - image: docker:18.09.7
+    steps:
+      - push-setup
+      - push:
+          directory: src
+
+workflows:
+  version: 2.1
+  build_everything:
+    # triggers:
+    #   - schedule:
+    #       cron: "0 8 * * *"
+    #       filters:
+    #         branches:
+    #           only:
+    #             - master
+    jobs:
+      - lint
+      - build-image:
+          requires:
+            - lint
+      - push-image:
+          requires:
+            - build-image
+          # filters:
+          #   branches:
+          #     only: master

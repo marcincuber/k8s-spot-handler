@@ -1,8 +1,8 @@
 REGISTRY ?= "marcincuber"
 NAME ?= "k8s-spot-handler"
 
-BASE_IMAGE ?= "alpine:3.9.4"
-KUBE_VERSION ?= "1.15.0"
+BASE_IMAGE ?= "alpine:3.10.3"
+KUBE_VERSION ?= $$(curl -s "https://api.github.com/repos/kubernetes/kubernetes/releases/latest" | jq -r .tag_name | grep -Ev "beta|alpha|rc")
 REVISION ?= "1"
 
 build_and_push: build_version push_version
