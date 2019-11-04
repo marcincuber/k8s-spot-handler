@@ -11,7 +11,7 @@ build_version:
 	docker build -t $(REGISTRY)/$(NAME):$(KUBE_VERSION)-$(REVISION) --build-arg BASE_IMAGE=$(BASE_IMAGE) --build-arg KUBE_VERSION=$(KUBE_VERSION) .
 
 save:
-	docker save $(REGISTRY)/$(NAME):$(KUBE_VERSION)-$(REVISION) -o $(NAME)_$(KUBE_VERSION).tar
+	docker save $(REGISTRY)/$(NAME):$(KUBE_VERSION)-$(REVISION) -o $(NAME)_$(KUBE_VERSION)-$(REVISION).tar
 
 load:
 	docker load -i $(NAME)_$(KUBE_VERSION)-$(REVISION).tar

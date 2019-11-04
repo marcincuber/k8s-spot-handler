@@ -49,7 +49,6 @@ commands:
           name: Check if docker image with tag already exists
           command: |
             docker images
-            cd << parameters.directory >>
             ls pwd
             if make -C << parameters.directory >> image_exists > /dev/null; 
             then
