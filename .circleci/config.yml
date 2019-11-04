@@ -48,6 +48,8 @@ commands:
       - run:
           name: Check if docker image with tag already exists
           command: |
+            pwd
+            ls
             if make -C << parameters.directory >> image_exists > /dev/null; 
             then
               echo "Docker image already exists."
@@ -82,7 +84,7 @@ jobs:
     steps:
       - push-setup
       - push:
-          directory: ./
+          directory: src
 
 workflows:
   version: 2.1
