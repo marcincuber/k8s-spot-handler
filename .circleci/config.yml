@@ -48,9 +48,6 @@ commands:
       - run:
           name: Check if docker image with tag already exists
           command: |
-            docker images
-            ls
-            pwd
             if make -C << parameters.directory >> image_exists > /dev/null; 
             then
               echo "Docker image already exists."
@@ -90,13 +87,13 @@ jobs:
 workflows:
   version: 2.1
   build_everything:
-    # triggers:
-    #   - schedule:
-    #       cron: "0 8 * * *"
-    #       filters:
-    #         branches:
-    #           only:
-    #             - master
+    triggers:
+      - schedule:
+          cron: "0 8 * * *"
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - lint
       - build-image:
@@ -105,6 +102,6 @@ workflows:
       - push-image:
           requires:
             - build-image
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
