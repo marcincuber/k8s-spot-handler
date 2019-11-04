@@ -3,7 +3,7 @@ version: 2.1
 executors:
   lint:
     docker:
-      - image: hadolint/hadolint:v1.17.0-debian
+      - image: hadolint/hadolint:v1.17.2-debian
 
 commands:
   lint:
@@ -81,7 +81,7 @@ jobs:
 
   push-image:
     docker:
-      - image: docker:18.09.7
+      - image: docker:18.09.9
     steps:
       - push-setup
       - push:
