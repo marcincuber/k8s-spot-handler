@@ -82,7 +82,7 @@ jobs:
     steps:
       - push-setup
       - push:
-          directory: src
+          directory: ./
 
 workflows:
   version: 2.1
