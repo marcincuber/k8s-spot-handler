@@ -1,8 +1,8 @@
-REGISTRY ?= "marcincuber"
+REGISTRY ?= "public.ecr.aws/b8a8x1o6"
 NAME ?= "k8s-spot-handler"
 
-BASE_IMAGE ?= "alpine:3.9.4"
-KUBE_VERSION ?= "1.15.0"
+BASE_IMAGE ?= "alpine:3.12.7"
+KUBE_VERSION ?= "1.18.20"
 REVISION ?= "1"
 
 build_and_push: build_version push_version
